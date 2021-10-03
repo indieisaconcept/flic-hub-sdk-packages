@@ -21,22 +21,25 @@ Provides a standardised way of creating a button package which responds to
 const helpers = require('../helpers/main');
 
 helpers.registerButtonPackage('mypackagename', {
-    onClick: function (config, button) {
-        console.log(config.configValue) // 1
-        // do something
-    },
-    onDoubleClick: function(config, button) {
-        // do something
-    },
-    onHold: function(config, button) {
-        // do something
-    }
+  onClick: function (config, button) {
+    console.log(config.configValue); // 1
+    // do something
+  },
+  onDoubleClick: function (config, button) {
+    // do something
+  },
+  onHold: function (config, button) {
+    // do something
+  },
 });
 ```
 
-Each button function is passed a config object which contains configuration options extracted from the button name. Additionally a metadata object is passed for the current button.
+Each button function is passed a config object which contains configuration
+options extracted from the button name. Additionally a metadata object is passed
+for the current button.
 
-Packages created using this method can be used by naming your button as per the following.
+Packages created using this method can be used by naming your button as per the
+following.
 
 ```
 sdk://mypackagename?configValue=1&configValue=2

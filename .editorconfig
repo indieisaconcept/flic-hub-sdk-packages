@@ -1,4 +1,4 @@
-[*.{js,jsx,scss,ts,tsx,vue}]
+[*.{js,ts}]
 end_of_line = lf
 indent_size = 2
 indent_style = space
