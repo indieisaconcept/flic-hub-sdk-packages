@@ -1,5 +1,5 @@
 import buttonManager, { Button, ButtonEvent } from 'buttons';
-import { IButtonCommands } from './types';
+import { IRegisterButtonPackage } from './types';
 
 const decode = decodeURIComponent;
 
@@ -45,25 +45,31 @@ const getClickType = (event: ButtonEvent): string =>
  * @param {string} namespace The command namespace
  * @param {object} commands  Command configuration
  */
-export const registerButtonPackage = (
-  namespace: string,
-  commands: IButtonCommands
-): void => {
-  const namespaceRegex = new RegExp('^sdk://' + namespace, 'i');
-
+export const registerButtonPackage = ({
+  namespace,
+  events,
+}: IRegisterButtonPackage): void => {
   buttonManager.on('buttonSingleOrDoubleClickOrHold', (event: ButtonEvent) => {
     const button: Button = buttonManager.getButton(event.bdaddr);
+    let skipEvent = false;
 
-    if (!namespaceRegex.test(button.name)) {
+    let namespaceRegex;
+
+    if (namespace) {
+      namespaceRegex = namespaceRegex || new RegExp(`^sdk://${namespace}`, 'i');
+      skipEvent = !namespaceRegex.test(button.name);
+    }
+
+    if (skipEvent) {
       return;
     }
 
     const clickType = getClickType(event);
-    const command = commands[clickType];
+    const eventCommand = events[clickType];
 
-    if (command) {
+    if (eventCommand) {
       const config = getConfiguration(button.name);
-      command(config, button);
+      eventCommand.call(button, config);
     }
   });
 };

@@ -21,28 +21,33 @@ const callback = (
   console.log(`Sonos | ${label} | ${CurrentValue}`);
 };
 
-registerButtonPackage('sonos', {
-  onClick: (config: IConfig) => {
-    const sonos = client(config);
+registerButtonPackage({
+  namespace: 'sonos',
+  events: {
+    onClick: (config: IConfig) => {
+      const sonos = client(config);
 
-    sonos.toggleEQValue('SurroundEnable', (err, result) => {
-      if (err) {
-        return console.log(err);
-      }
+      sonos.toggleEQValue('SurroundEnable', (err, result) => {
+        if (err) {
+          return console.log(err);
+        }
 
-      sonos.setEQValue(
+        sonos.setEQValue(
+          'SubEnable',
+          result?.CurrentValue,
+          callback.bind(null, 'Home Theatre')
+        );
+      });
+    },
+    onDoubleClick: (config: IConfig) =>
+      client(config).toggleEQValue(
+        'SurroundEnable',
+        callback.bind(null, 'Surround')
+      ),
+    onHold: (config: IConfig) =>
+      client(config).toggleEQValue(
         'SubEnable',
-        result?.CurrentValue,
-        callback.bind(null, 'Home Theatre')
-      );
-    });
+        callback.bind(null, 'Subwoofer')
+      ),
   },
-  onDoubleClick: (config: IConfig) =>
-    client(config).toggleEQValue(
-      'SurroundEnable',
-      callback.bind(null, 'Surround')
-    ),
-
-  onHold: (config: IConfig) =>
-    client(config).toggleEQValue('SubEnable', callback.bind(null, 'Subwoofer')),
 });

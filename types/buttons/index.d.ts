@@ -1,9 +1,4 @@
 declare module 'buttons' {
-  export type ButtonFunction = (
-    config: Record<string, unknown>,
-    button: Button
-  ) => void;
-
   export interface ButtonEvent {
     bdaddr: string;
     isSingleClick?: boolean;
